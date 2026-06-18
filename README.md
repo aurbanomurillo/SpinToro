@@ -1,76 +1,70 @@
 # SpinToro
 
-SpinToro is a Python recreation of the classic rotating ASCII donut, extended with a video export pipeline so the animation can be rendered as a high-resolution wallpaper-ready MP4.
+<p align="center">
+	<img src="assets/donut-preview.png" alt="SpinToro preview" width="100%">
+</p>
 
-## What the repository does
+<p align="center">
+	A polished ASCII donut renderer for the console and a 1080p MP4 exporter for wallpaper-style playback.
+</p>
 
-The project contains two execution modes:
+<p align="center">
+	<strong>Console mode</strong> · <strong>MP4 export</strong> · <strong>Monospace PIL render</strong> · <strong>Progress bar</strong>
+</p>
 
-- `console.py` reproduces the original terminal version of the donut and prints the animation directly to the console.
-- `main.py` renders the same mathematical donut into 1080p frames using Pillow and exports the result as `donut_3d_1080p.mp4`.
+## Overview
 
-The core torus math is intentionally preserved. The `xyz`, `xyprime`, and `L` functions still define the 3D position, 2D projection, and lighting response, and the internal Z-buffer logic still decides which ASCII character reaches the screen for each frame.
+SpinToro is a Python project that keeps the classic rotating ASCII donut math intact while giving it a second life as a high-resolution video asset. The repo ships with two entry points:
 
-## How it works
+- [console.py](console.py) restores the original terminal animation and prints the donut directly to your console.
+- [main.py](main.py) renders the same donut into 1920x1080 frames and exports a ready-to-use MP4.
 
-At a high level, the animation is built in four stages:
+The core trigonometry is preserved on purpose. The `xyz`, `xyprime`, and `L` functions still define the torus geometry, the screen projection, and the lighting response, and the Z-buffer logic still decides which ASCII character is visible at each position.
 
-1. The torus is sampled in two angles, `theta` and `phi`.
-2. Each sample point is rotated with the global angles `A` and `B`.
-3. The point is projected to 2D and compared against a Z-buffer so only the closest sample remains visible.
-4. The visible samples are rendered as ASCII characters.
+## Preview
 
-In `main.py`, that same ASCII buffer is drawn onto a black 1920x1080 image using a monospaced font and then encoded into an MP4 video. This makes the output suitable for use as a live wallpaper source or any other looping background workflow.
+The image above is a frame extracted from the generated animation and composed as a README hero. It shows the final look of the project more clearly than a text-only description can.
 
-## Files
+## What Makes It Interesting
 
-- `main.py`: video export pipeline.
-- `console.py`: original console animation.
-- `.gitignore`: repository ignore rules, including generated MP4 files.
-- `LICENSE`: project license.
-- `CODE_OF_CONDUCT.md`: community behavior policy.
-- `CONTRIBUTING.md`: contribution workflow.
-- `SECURITY.md`: vulnerability reporting guidance.
+- The donut is rendered from pure mathematics, not from a mesh asset.
+- The video exporter uses Pillow to draw the ASCII buffer onto a full HD canvas.
+- The animation is tuned to move more slowly than the original console version while keeping a high output frame rate.
+- A progress bar is shown during export so long renders remain observable.
+- The final MP4 is suitable for looping wallpaper workflows.
 
-## Requirements
+## How It Works
 
-The video exporter uses:
+At a high level, each frame is produced in four stages:
 
-- Python 3.12+
-- Pillow
-- NumPy
-- OpenCV or imageio fallback
-- progressbar2
+1. The torus is sampled with `theta` and `phi`.
+2. The global angles `A` and `B` rotate the geometry.
+3. Each projected point is compared against a Z-buffer so only the closest visible sample survives.
+4. The surviving sample is converted into an ASCII character and rendered.
 
-The console version only requires Python’s standard library.
+In `main.py`, that ASCII frame is centered inside a black 1920x1080 image, drawn with a monospaced font, and written to disk as an MP4 file.
 
-## Installation
+## Quick Start
 
-Create and activate a virtual environment if you do not already have one, then install the dependencies used by the video exporter:
+Install the dependencies used by the video exporter:
 
 ```bash
 pip install pillow numpy opencv-python imageio imageio-ffmpeg progressbar2
 ```
 
-## Usage
-
-### Console mode
-
-Run the original terminal animation:
+Run the console version if you want the original terminal effect:
 
 ```bash
 python console.py
 ```
 
-### Video mode
-
-Run the main exporter to generate the MP4:
+Run the main exporter when you want the MP4 file:
 
 ```bash
 python main.py
 ```
 
-Running `main.py` is what creates the final video file. The script renders the animation frame by frame and writes the MP4 to disk automatically.
+Running `main.py` is what generates and "downloads" the video artifact into the project folder.
 
 ## Output
 
@@ -78,26 +72,36 @@ By default, the exporter writes:
 
 - `donut_3d_1080p.mp4`
 
-If that file is locked by another process, the script automatically falls back to a numbered filename such as `donut_3d_1080p_1.mp4`.
+If that filename is already locked or unavailable, the script automatically falls back to a numbered variant such as `donut_3d_1080p_1.mp4`.
 
-## Performance and visual tuning
+## Tuning the Look
 
-The renderer is configured for a smooth 60 FPS output while keeping the animation visually slower than the original terminal version. That separation between rotation speed and output FPS makes the video cleaner for wallpaper use.
+The current configuration is intentionally tuned for a wallpaper-friendly result. The most useful controls live in [main.py](main.py):
 
-You can tune the feel of the animation through these values in `main.py`:
+- `velocidad_rotacion`: lowers or raises the angular speed.
+- `fps`: controls video playback speed.
+- `wide` and `high`: adjust ASCII buffer density.
+- `K1`: changes the apparent size of the donut inside the frame.
+- `video_w` and `video_h`: define the final export resolution.
 
-- `velocidad_rotacion`: reduces or increases the angular speed.
-- `fps`: controls the playback frame rate.
-- `wide` and `high`: control the logical ASCII buffer density.
-- `K1`: controls the apparent size of the donut inside the frame.
+## Repository Layout
 
-## Repository policy
+- [main.py](main.py): MP4 export pipeline.
+- [console.py](console.py): original console animation.
+- [assets/donut-preview.png](assets/donut-preview.png): README preview image.
+- [.gitignore](.gitignore): ignores generated media and local tooling files.
+- [LICENSE](LICENSE): MIT license.
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md): community behavior guidelines.
+- [CONTRIBUTING.md](CONTRIBUTING.md): contribution workflow.
+- [SECURITY.md](SECURITY.md): security reporting guidance.
 
-Generated media files are ignored by design so the repository stays lightweight. Commit the source code, documentation, and license files, but not exported videos.
+## Project Policy
+
+Generated MP4 files are intentionally ignored so the repository stays small and focused on source code and documentation. The README includes the preview image as a committed asset because it helps explain the project at a glance.
 
 ## License
 
-This project is distributed under the MIT License. See [LICENSE](LICENSE) for the full text.
+This project is distributed under the MIT License. See [LICENSE](LICENSE) for the full terms.
 
 ## Contributing
 
