@@ -48,7 +48,7 @@ CHARS = ".,-~:;=!*#$@" # Paleta de caracteres (12 niveles de oscuridad a brillo)
 # valores ya calculados. El resultado matemático es idéntico (comprobado
 # numéricamente, diferencia ~1e-15, puro ruido de redondeo de punto
 # flotante, no afecta a ningún píxel ni carácter).
-PASO = 0.025
+PASO = 0.01
 
 def _generar_secuencia(limite):
     valores = []

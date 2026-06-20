@@ -37,6 +37,7 @@ Thumbs.db
 *.webm
 *.avi
 *.gif
+/videos
 
 # Project outputs
 donut_3d_1080p*.mp4
