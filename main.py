@@ -76,7 +76,7 @@ r_tubo = [R2 + R1 * ct for ct in cos_thetas]
 video_w = 1920
 video_h = 1080
 fps = 60
-salida_mp4 = "donut_3d_1080p.mp4"
+salida_mp4 = f"torus_3d_{video_w}x{video_h}_{fps}fps.mp4"
 
 # Bucle perfecto: usamos el incremento actual de B para estimar frames,
 # y ajustamos incrementos exactos para cerrar exactamente en 2*pi.
